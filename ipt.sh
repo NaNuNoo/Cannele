@@ -1,14 +1,17 @@
 #!/bin/bash
 
-iptables -F
+sudo iptables -F
 
-iptables -A INPUT -p tcp --dport 7701 -j ACCEPT # ssh
-iptables -A INPUT -p tcp --sport 6602 --dport 7702 -j ACCEPT # shadowsocks
-iptables -A INPUT -p tcp --sport 6603 --dport 7703 -j ACCEPT # pptp
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT # nginx
+sudo iptables -A INPUT -p tcp --dport 7701 -j ACCEPT # ssh
+sudo iptables -A INPUT -p tcp --dport 7702 -j ACCEPT # shadowsocks
+sudo iptables -A INPUT -p tcp --dport 7703 -j ACCEPT # pptp
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT # http
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT # https
 
-iptables -P INPUT REJECT
-iptables -P OUTPUT ACCEPT
-iptables -P FORWARD REJECT
+sudo iptables -A INPUT -m state --state ESTABLISHED -j ACCEPT
 
-service iptables save
+sudo iptables -P INPUT REJECT
+sudo iptables -P OUTPUT ACCEPT
+sudo iptables -P FORWARD REJECT
+
+sudo iptables-save > iptables.conf
